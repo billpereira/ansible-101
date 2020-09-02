@@ -1,0 +1,25 @@
+---
+  - hosts: cobol
+    gather_facts: no
+    environment:
+      "{{default_environment}}"
+    collections:
+      - ibm.ibm_zos_core
+    
+    tasks:
+      - name: Submitting a job
+        zos_job_submit:
+          src: iefbr14.jcl
+          location: LOCAL
+          wait: True
+          return_output: True
+          max_rc: 0
+          # wait_time_s: 60
+          # volume: VOLSER
+          # encoding:
+          #   from: ISO8859-1
+          #   to: IBM-037
+        register: job_output
+      - debug:
+          msg: '{{job_output.jobs[0].job_id}}'
+      

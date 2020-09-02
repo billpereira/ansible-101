@@ -1,0 +1,18 @@
+---
+  - hosts: all:!linux
+    gather_facts: no
+    environment:
+      "{{default_environment}}"
+    collections:
+      - ibm.ibm_zos_core
+    
+    tasks:
+      - name: Execute an operator command
+        zos_operator:
+          cmd: 'd iplinfo'
+          # verbose: true
+        register: iplinfo
+        
+      - debug:
+          msg: "{{iplinfo}}"
+      

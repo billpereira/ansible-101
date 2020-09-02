@@ -1,0 +1,26 @@
+---
+  - hosts: cobol
+    gather_facts: no
+    environment:
+      "{{default_environment}}"
+    collections:
+      - ibm.ibm_zos_core
+    
+    tasks:
+      - name: Copy our source module
+        zos_copy:
+          src: hello.cbl
+          dest: '{{ansible_user.upper()}}.ANSB.CBL(HELLO)'
+      - name: Prepare our jcl
+        template:
+          src: compile.j2
+          dest:  compile.jcl
+        delegate_to: localhost
+      - name: Submit the compile job
+        zos_job_submit:
+          src: compile.jcl
+          location: LOCAL
+          wait: True
+          return_output: True
+          max_rc: 4
+      

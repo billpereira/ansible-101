@@ -1,0 +1,22 @@
+---
+  - hosts: cobol
+    gather_facts: no
+    environment:
+      "{{default_environment}}"
+    collections:
+      - ibm.ibm_zos_core
+    
+    tasks:
+      - name: Creating source library
+        zos_data_set:
+          name: '{{ansible_user.upper()}}.ansb.CBL'
+          type:  PDS  
+      
+      - name: Creating load library
+        zos_data_set:
+          name: '{{ansible_user}}.ansb.load'
+          type:  library
+          record_format: U
+      
+      
+      
